@@ -25,7 +25,7 @@
     }
 
     .active {
-        translate: 0 70%;
+        translate: 0 60%;
     }
 
     .date {
