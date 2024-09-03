@@ -22,9 +22,9 @@
     <Drawer />
     
     <div style="padding: 1rem;" class="to-be-deleted">
-        <p>NOTE: upon clicking a task, a swipe up panel appears from the bottom of the screen, containing details such as important and completed status, id, last updated, and the delete button</p>
+        <p>TO DO: learn a UI library for swipe gestures and implement swiping to navigate between task categories</p>
         
-        <p>v 1.0.1</p>
+        <p>v 1.0.2</p>
     </div>
 </div>
 
