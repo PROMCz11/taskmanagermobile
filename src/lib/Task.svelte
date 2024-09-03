@@ -5,15 +5,19 @@
     import uncheckedRadioSrc from "$lib/assets/task-radio-unchecked-icon.svg"
     import checkedRadioSrc from "$lib/assets/task-radio-checked-icon.svg"
 
-    import { drawerActive } from "$lib/stores";
+    import { isDrawerActive } from "$lib/stores";
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="task" class:important class:completed>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="task-info-container" on:click={e => {
-        if(!e.target.classList.contains("content")){
-            $drawerActive = true;
+        if(!e.target.classList.contains("content") && !$isDrawerActive){
+            setTimeout(() => {
+                
+            $isDrawerActive = true;
+            console.log("true");
+            }, 10);
         }
     }}>
         <p class="content" contenteditable>This would be the task's content</p>

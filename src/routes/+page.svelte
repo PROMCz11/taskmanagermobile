@@ -1,15 +1,13 @@
 <script>
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
-    import { drawerActive } from "$lib/stores";
-
-    // To be deleted
+    import { isDrawerActive } from "$lib/stores";
 </script>
 
 <div on:click={e => {
-    const target = e.target;
-    if(!target.classList.contains("task") && !target.parentElement.classList.contains("task") && !target.parentElement.parentElement.classList.contains("task")) {
-        $drawerActive = false;
+    if(!e.target.classList.contains("drawer") && !e.target.parentElement.classList.contains("drawer") && $isDrawerActive) {
+        $isDrawerActive = false;
+        console.log("false");
     }
 }}>
     <div>
