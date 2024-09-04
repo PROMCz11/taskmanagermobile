@@ -12,6 +12,7 @@
 <div class="controls">
     <div class="navbar">
         <button class="settings"><img src={settingsIconSrc} alt="settings"></button>
+        <p>Zain's Tasks</p>
         <div class="filters">
             <div class="all-filter">
                 <img src={allTasksIconSrc} alt="all tasks">
@@ -69,7 +70,7 @@
 
     .navbar {
         display: flex;
-        justify-content: space-between;
+        gap: .5rem;
         align-items: center;
     }
 
@@ -96,6 +97,7 @@
         display: flex;
         align-items: center;
         gap: .5rem;
+        margin-left: auto;
     }
 
     .filters > * {
