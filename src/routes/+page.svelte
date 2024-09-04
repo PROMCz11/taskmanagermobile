@@ -18,7 +18,7 @@
 <div style="padding: 1rem;" class="to-be-deleted">
     <!-- <p>TO DO</p> -->
     
-    <p>v 1.0.5</p>
+    <p>v 1.0.6</p>
 </div>
 
 <style>

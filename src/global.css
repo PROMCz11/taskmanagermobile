@@ -65,3 +65,17 @@ body {
     font-family: sans-serif;
     font-size: 1.2rem;
 }
+
+.circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #1A1A1A;
+}
+
+button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0;
+}

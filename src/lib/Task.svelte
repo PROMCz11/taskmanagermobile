@@ -52,12 +52,6 @@
         text-decoration: line-through;
     }
 
-    button {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-    }
-
     .completed-toggle {
         margin-left: auto;
     }
