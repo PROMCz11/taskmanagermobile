@@ -6,6 +6,8 @@
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
 
+    $: console.log($tasks);
+
     const getTasksFromServer = async () => {
         const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
             method: "POST",
@@ -15,7 +17,7 @@
             headers: {"Content-type": "application/json; charset=UTF-8"}
         });
         const json = await res.json();
-        return json.data.tasks;
+        $tasks = json.data.tasks;
     }
 </script>
 
@@ -41,9 +43,9 @@
 <div class="task-container">
     {#await getTasksFromServer()}
         Loading...
-    {:then tasks}
-        {#each tasks as { _id, content, date, last_updated, important, completed }}
-            <Task {_id} {content} {date} {last_updated} {important} {completed} />
+    {:then}
+        {#each $tasks as { _id, content, date, last_updated, important, completed }}
+            <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
         {/each}
     {/await}
 </div>

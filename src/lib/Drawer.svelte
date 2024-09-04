@@ -1,12 +1,44 @@
 <script>
-    export let _id = 0;
+    // export let _id = 0;
     import { isDrawerActive } from "$lib/stores";
+    import { IDForDrawer } from "$lib/stores";
+    import { tasks } from "$lib/stores";
     import deleteIconSrc from "$lib/assets/delete-icon.svg"
 
     const closeDrawer = e => {
         if(e.target.classList.contains("drawer-wrapper") && $isDrawerActive) {
             $isDrawerActive = false;
         }
+    }
+
+    let date, last_updated, important, completed, index;
+    const updateDrawer = () => {
+        if($IDForDrawer) {
+            const displayedTask = $tasks.find(task => task._id === $IDForDrawer);
+
+            date = displayedTask.date;
+            last_updated = displayedTask.last_updated;
+            important = displayedTask.important;
+            completed = displayedTask.completed;
+
+            index = $tasks.indexOf(displayedTask);
+        }
+    }
+
+    $: $IDForDrawer, $tasks, updateDrawer();
+
+    const getFormattedLocalTime = (millisecondsSinceEpoch) => {
+        const dateFromMilliseconds = new Date(millisecondsSinceEpoch);
+        const options = {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        };
+        const formattedLocalTime = dateFromMilliseconds.toLocaleTimeString(undefined, options).split(",").join("");
+        return formattedLocalTime;
     }
 </script>
 
@@ -16,15 +48,15 @@
     <div class="drawer">
         <!-- <p>This would be the task's content</p> -->
          <div>
-            <p class="date">Created: Sun 12/4 10:34 AM</p>
-            <p class="date">Last Updated: Sun 12/4 10:34 AM</p>
+            <p class="date">Created: {getFormattedLocalTime(date)}</p>
+            <p class="date">Last Updated: {getFormattedLocalTime(last_updated)}</p>
         </div>
         <div class="indicator-container">
-            <div class="important-indicator">
+            <div class:active={important} class="important-indicator">
                 <div class="circle"></div>
                 <p>Important</p>
             </div>
-            <div class="completed-indicator">
+            <div class:active={completed} class="completed-indicator">
                 <div class="circle"></div>
                 <p>Completed</p>
             </div>
@@ -59,7 +91,7 @@
         gap: 1rem;
     }
 
-    .active {
+    .drawer-wrapper.active {
         translate: 0;
     }
 
@@ -72,11 +104,11 @@
         gap: .5rem;
     }
     
-    .important-indicator .circle {
+    .important-indicator.active .circle {
         background-color: red;
     }
     
-    .completed-indicator .circle {
+    .completed-indicator.active .circle {
         background-color: green;
     }
 

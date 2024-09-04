@@ -6,6 +6,8 @@
     import menuIconSrc from "$lib/assets/menu-icon.svg"
 
     import { isDrawerActive } from "$lib/stores";
+    import { IDForDrawer } from "$lib/stores";
+    import { tasks } from "$lib/stores";
 
     const getFormattedLocalTime = (millisecondsSinceEpoch) => {
         const dateFromMilliseconds = new Date(millisecondsSinceEpoch);
@@ -23,6 +25,7 @@
 
     const openDrawer = () => {
         if(!$isDrawerActive) {
+            $IDForDrawer = _id;
             $isDrawerActive = true;
         }
     }
@@ -36,7 +39,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="task" class:important class:completed>
+<div id={_id} class="task" class:important class:completed>
     <button on:click={openDrawer}><img src={menuIconSrc} alt="menu"></button>
     <div>
         <p class="content" bind:textContent={content} contenteditable></p>
@@ -67,10 +70,10 @@
     .task.important {
         border-color: red;
     }
-
+/* 
     .task.completed {
         border-color: green;
-    }
+    } */
 
     .task.completed .content {
         text-decoration: line-through;
