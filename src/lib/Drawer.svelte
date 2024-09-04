@@ -45,6 +45,7 @@
     const toggleImportant = () => {
         $tasks[index].important = !$tasks[index].important;
         const last_updated = new Date().getTime();
+        $tasks[index].last_updated = last_updated;
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
             method: "PATCH",
             body: JSON.stringify({
@@ -61,6 +62,7 @@
     const toggleCompleted = () => {
         $tasks[index].completed = !$tasks[index].completed;
         const last_updated = new Date().getTime();
+        $tasks[index].last_updated = last_updated;
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
             method: "PATCH",
             body: JSON.stringify({

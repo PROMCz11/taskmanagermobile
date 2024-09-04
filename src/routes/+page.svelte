@@ -19,6 +19,36 @@
         const json = await res.json();
         $tasks = json.data.tasks;
     }
+
+    const addTask = (content) => {
+        const date = new Date().getTime();
+        fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks/add", {
+            method: "POST",
+            body: JSON.stringify({
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+            content: content,
+            date: date,
+            important: false,
+            completed: false
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(res => res.json())
+        .then(json => {
+            const newTask = {
+                _id: json.data.id,
+                content: content,
+                date: date,
+                last_updated: date,
+                completed: false,
+                important: false
+            }
+
+            $tasks = [...$tasks, newTask];
+        })
+    }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -37,7 +67,10 @@
             <div class="completed-filter circle"></div>
         </div>
     </div>
-    <input class="task-input" placeholder="Enter a task..." type="text">
+    <input on:change={e => {
+            addTask(e.target.value);
+            e.target.value = "";
+        }} class="task-input" placeholder="Enter a task..." type="text">
 </div>
 
 <div class="task-container">
@@ -52,7 +85,7 @@
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.2</p>
+<p style="padding-inline: 1rem;">v 1.2.3</p>
 
 <style>
     .task-container {
