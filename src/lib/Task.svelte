@@ -7,7 +7,6 @@
 
     import { isDrawerActive } from "$lib/stores";
     import { IDForDrawer } from "$lib/stores";
-    import { tasks } from "$lib/stores";
 
     const getFormattedLocalTime = (millisecondsSinceEpoch) => {
         const dateFromMilliseconds = new Date(millisecondsSinceEpoch);
@@ -33,7 +32,17 @@
     const toggleCompleted = () => {
         completed = !completed;
         last_updated = new Date().getTime();
-        // send to the server
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                completed: completed,
+                last_updated: last_updated
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
     }
 </script>
 

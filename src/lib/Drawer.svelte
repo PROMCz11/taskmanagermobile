@@ -11,7 +11,7 @@
         }
     }
 
-    let date, last_updated, important, completed, index;
+    let date, last_updated, important, completed, index, _id;
     const updateDrawer = () => {
         if($IDForDrawer) {
             const displayedTask = $tasks.find(task => task._id === $IDForDrawer);
@@ -20,6 +20,7 @@
             last_updated = displayedTask.last_updated;
             important = displayedTask.important;
             completed = displayedTask.completed;
+            _id = displayedTask._id;
 
             index = $tasks.indexOf(displayedTask);
         }
@@ -40,23 +41,54 @@
         const formattedLocalTime = dateFromMilliseconds.toLocaleTimeString(undefined, options).split(",").join("");
         return formattedLocalTime;
     }
+
+    const toggleImportant = () => {
+        $tasks[index].important = !$tasks[index].important;
+        const last_updated = new Date().getTime();
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                important: $tasks[index].important,
+                last_updated: last_updated
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+    }
+
+    const toggleCompleted = () => {
+        $tasks[index].completed = !$tasks[index].completed;
+        const last_updated = new Date().getTime();
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                completed: $tasks[index].completed,
+                last_updated: last_updated
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click={closeDrawer} class="drawer-wrapper" class:active={$isDrawerActive}>
     <div class="drawer">
-        <!-- <p>This would be the task's content</p> -->
          <div>
             <p class="date">Created: {getFormattedLocalTime(date)}</p>
             <p class="date">Last Updated: {getFormattedLocalTime(last_updated)}</p>
         </div>
         <div class="indicator-container">
-            <div class:active={important} class="important-indicator">
+            <div on:click={toggleImportant} class:active={important} class="important-indicator">
                 <div class="circle"></div>
                 <p>Important</p>
             </div>
-            <div class:active={completed} class="completed-indicator">
+            <div on:click={toggleCompleted} class:active={completed} class="completed-indicator">
                 <div class="circle"></div>
                 <p>Completed</p>
             </div>
