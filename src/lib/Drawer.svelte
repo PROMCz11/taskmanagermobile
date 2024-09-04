@@ -53,6 +53,7 @@
         border-top-left-radius: 1rem;
         padding: 1rem;
         border: 2px solid #757575;
+        border-bottom: 0;
         display: flex;
         flex-direction: column;
         gap: 1rem;
