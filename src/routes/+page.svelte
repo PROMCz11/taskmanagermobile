@@ -52,7 +52,7 @@
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.1</p>
+<p style="padding-inline: 1rem;">v 1.2.2</p>
 
 <style>
     .task-container {
