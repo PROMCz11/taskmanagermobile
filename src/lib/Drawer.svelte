@@ -35,7 +35,8 @@
         background-color: #222222;
         inset: 60% 0 0 0;
         position: fixed;
-        border-radius: 1rem;
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
         padding: 1rem;
     }
 
