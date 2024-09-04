@@ -2,8 +2,21 @@
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
     // import { isDrawerActive } from "$lib/stores";
+    import { tasks } from "$lib/stores";
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
+
+    const getTasksFromServer = async () => {
+        const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
+            method: "POST",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q"
+            }),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        });
+        const json = await res.json();
+        return json.data.tasks;
+    }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -26,39 +39,18 @@
 </div>
 
 <div class="task-container">
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
-    <Task />
-    <Task />
-    <Task important={true}/>
-    <Task />
+    {#await getTasksFromServer()}
+        Loading...
+    {:then tasks}
+        {#each tasks as { _id, content, date, last_updated, important, completed }}
+            <Task {_id} {content} {date} {last_updated} {important} {completed} />
+        {/each}
+    {/await}
 </div>
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.0.9</p>
+<p style="padding-inline: 1rem;">v 1.2.0</p>
 
 <style>
     .task-container {

@@ -3,7 +3,7 @@
     import { isDrawerActive } from "$lib/stores";
     import deleteIconSrc from "$lib/assets/delete-icon.svg"
 
-    const drawerClickHandler = e => {
+    const closeDrawer = e => {
         if(e.target.classList.contains("drawer-wrapper") && $isDrawerActive) {
             $isDrawerActive = false;
         }
@@ -12,7 +12,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:click={drawerClickHandler} class="drawer-wrapper" class:active={$isDrawerActive}>
+<div on:click={closeDrawer} class="drawer-wrapper" class:active={$isDrawerActive}>
     <div class="drawer">
         <!-- <p>This would be the task's content</p> -->
          <div>
