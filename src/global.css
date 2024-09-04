@@ -59,6 +59,8 @@ select {
 /* Styles              */
 /* ------------------- */
 
+/* Don't forget to create a color variable library */
+
 body {
     background-color: black;
     color: white;

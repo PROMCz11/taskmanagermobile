@@ -14,9 +14,11 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click={drawerClickHandler} class="drawer-wrapper" class:active={$isDrawerActive}>
     <div class="drawer">
-        <p>This would be the task's content</p>
-        <p class="date">Created: Sun 12/4 10:34 AM</p>
-        <p class="date">Last Updated: Sun 12/4 10:34 AM</p>
+        <!-- <p>This would be the task's content</p> -->
+         <div>
+            <p class="date">Created: Sun 12/4 10:34 AM</p>
+            <p class="date">Last Updated: Sun 12/4 10:34 AM</p>
+        </div>
         <div class="indicator-container">
             <div class="important-indicator">
                 <div class="circle"></div>
@@ -53,7 +55,7 @@
         border: 2px solid #757575;
         display: flex;
         flex-direction: column;
-        gap: .5rem;
+        gap: 1rem;
     }
 
     .active {
