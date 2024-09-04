@@ -16,7 +16,7 @@
 <Drawer />
 
 <div style="padding: 1rem;" class="to-be-deleted">
-    <p>TO DO: learn a UI library for swipe gestures and implement swiping to navigate between task categories</p>
+    <!-- <p>TO DO</p> -->
     
     <p>v 1.0.5</p>
 </div>
