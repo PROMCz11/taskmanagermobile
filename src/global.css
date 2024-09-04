@@ -68,6 +68,10 @@ body {
     font-size: 1.2rem;
 }
 
+img {
+    -webkit-user-drag: none;
+}
+
 .circle {
     width: 25px;
     height: 25px;
