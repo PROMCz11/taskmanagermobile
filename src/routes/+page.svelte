@@ -1,12 +1,21 @@
 <script>
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
-    import { isDrawerActive } from "$lib/stores";
+    // import { isDrawerActive } from "$lib/stores";
+    import settingsIconSrc from "$lib/assets/settings-icon.svg";
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div>
+
+<div class="navbar">
+    <button class="settings"><img src={settingsIconSrc} alt="settings"></button>
+    <div>
+        filters
+    </div>
+</div>
+
+<div class="task-container">
     <Task />
     <Task />
     <Task important={true}/>
@@ -15,17 +24,25 @@
 
 <Drawer />
 
-<div style="padding: 1rem;" class="to-be-deleted">
-    <!-- <p>TO DO</p> -->
-    
-    <p>v 1.0.7</p>
-</div>
+<p style="padding-inline: 1rem;">v 1.0.8</p>
 
 <style>
-    div {
+    .task-container {
         display: flex;
         flex-direction: column;
         gap: .5rem;
         padding: .5rem;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .5rem;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: black;
     }
 </style>
