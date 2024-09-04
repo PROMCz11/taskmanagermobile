@@ -4,6 +4,7 @@
 
     import uncheckedRadioSrc from "$lib/assets/task-radio-unchecked-icon.svg"
     import checkedRadioSrc from "$lib/assets/task-radio-checked-icon.svg"
+    import menuIconSrc from "$lib/assets/menu-icon.svg"
 
     import { isDrawerActive } from "$lib/stores";
 </script>
@@ -11,11 +12,12 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="task" class:important class:completed>
-    <div class="task-info-container" on:click={e => {
-        if(!e.target.classList.contains("content") && !$isDrawerActive){
+    <button on:click={() => {
+        if(!$isDrawerActive) {
             $isDrawerActive = true;
         }
-    }}>
+    }}><img src={menuIconSrc} alt="menu"></button>
+    <div>
         <p class="content" contenteditable>This would be the task's content</p>
         <p class="date">Sun 12/4 10:34 AM</p>
     </div>
@@ -29,7 +31,7 @@
         background-color: #222222;
         padding: .5rem;
         display: flex;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         gap: .5rem;
         align-items: center;
     }
@@ -50,9 +52,13 @@
         text-decoration: line-through;
     }
 
-    .completed-toggle {
+    button {
         background-color: transparent;
         border: none;
         padding: 0;
+    }
+
+    .completed-toggle {
+        margin-left: auto;
     }
 </style>
