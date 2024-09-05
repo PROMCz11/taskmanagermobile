@@ -85,7 +85,7 @@
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.3</p>
+<p style="padding-inline: 1rem;">v 1.2.4</p>
 
 <style>
     .task-container {

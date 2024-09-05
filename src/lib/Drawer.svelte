@@ -75,6 +75,29 @@
             }
         })
     }
+
+    const deleteTask = (toBeDeletedArray) => {
+
+        $isDrawerActive = false;
+
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+            method: "DELETE",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                ids: toBeDeletedArray
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(res => res.json())
+        .then(json => console.log(json))
+        .catch(err => console.log(err))
+
+        const _idShell = _id;
+        $IDForDrawer = "";
+        $tasks = $tasks.filter(task => task._id != _idShell);
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -95,7 +118,7 @@
                 <p>Completed</p>
             </div>
         </div>
-        <button class="delete">
+        <button on:click={() => deleteTask([_id])} class="delete">
             <img src={deleteIconSrc} alt="delete">
             <p>Delete</p>
         </button>
