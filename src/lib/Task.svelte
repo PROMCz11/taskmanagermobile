@@ -49,21 +49,27 @@
         if(e.key === "Enter") {
             e.preventDefault();
             e.target.blur()
-
-            const newContent = e.target.textContent;
-            last_updated = new Date().getTime();
-            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-                method: "PATCH",
-                body: JSON.stringify({
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
-                    content: newContent,
-                    last_updated: last_updated
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            })
         }
+    }
+
+    const blurHandler = e => {
+        const newContent = e.target.textContent;
+        updateTaskContent(newContent);
+    }
+
+    const updateTaskContent = (newContent) => {
+        last_updated = new Date().getTime();
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                content: newContent,
+                last_updated: last_updated
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
     }
 </script>
 
@@ -72,7 +78,7 @@
 <div id={_id} class="task" class:important class:completed>
     <button on:click={openDrawer}><img src={menuIconSrc} alt="menu"></button>
     <div>
-        <p on:keydown={e => handleInput(e)} class="content" bind:textContent={content} contenteditable></p>
+        <p on:keydown={e => handleInput(e)} on:blur={e => blurHandler(e)} class="content" bind:textContent={content} contenteditable></p>
         <p class="date">{getFormattedLocalTime(date)}</p>
     </div>
     <button on:click={toggleCompleted} class="completed-toggle"><img src={completed ? checkedRadioSrc : uncheckedRadioSrc} alt="complete"></button>
