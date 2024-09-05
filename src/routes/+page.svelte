@@ -49,6 +49,31 @@
             $tasks = [...$tasks, newTask];
         })
     }
+
+    let filterCode = 1;
+
+    const filterTasks = () => {
+        // Code 0: all tasks
+        // Code 1: undone tasks
+        // Code 2: important tasks
+        // Code 3: completed tasks
+
+        switch (filterCode) {
+            case 0:
+                return $tasks;
+            case 1:
+                return $tasks.filter(task => !task.completed)
+            case 2:
+                return $tasks.filter(task => !task.completed && task.important);
+            case 3:
+                return $tasks.filter(task => task.completed);
+        
+            default:
+                break;
+        }
+    }
+
+    $: filterTasks(filterCode);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -59,12 +84,12 @@
         <button class="settings"><img src={settingsIconSrc} alt="settings"></button>
         <p>Zain's Tasks</p>
         <div class="filters">
-            <div class="all-filter">
+            <button on:click={() => filterCode = 0} class="all-filter">
                 <img src={allTasksIconSrc} alt="all tasks">
-            </div>
-            <div class="undone-filter active circle"></div>
-            <div class="important-filter circle"></div>
-            <div class="completed-filter circle"></div>
+            </button>
+            <button on:click={() => filterCode = 1} class="undone-filter active circle"></button>
+            <button on:click={() => filterCode = 2} class="important-filter circle"></button>
+            <button on:click={() => filterCode = 3} class="completed-filter circle"></button>
         </div>
     </div>
     <input on:change={e => {
@@ -77,7 +102,7 @@
     {#await getTasksFromServer()}
         Loading...
     {:then}
-        {#each $tasks as { _id, content, date, last_updated, important, completed }}
+        {#each filterTasks(filterCode) as { _id, content, date, last_updated, important, completed }}
             <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
         {/each}
     {/await}
@@ -85,7 +110,7 @@
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.5</p>
+<p style="padding-inline: 1rem;">v 1.2.6</p>
 
 <style>
     .task-container {
