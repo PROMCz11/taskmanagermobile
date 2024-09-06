@@ -64,21 +64,6 @@
     $: undoneTasks = $tasks.filter(task => !task.completed);
     $: importantTasks = $tasks.filter(task => !task.completed && task.important);
     $: completedTasks = $tasks.filter(task => task.completed);
-
-    // There has to be token cookies handling within this page, use query strings in the url to achieve the result
-
-    // const insertTokenIntoCookies = token => {
-    //     const expiryDate = new Date();
-    //     expiryDate.setMonth(expiryDate.getMonth() + 1);
-    //     document.cookie = `token=${token}; expires=${expiryDate.toUTCString()}`;
-    // }
-
-    // const getTokenFromCookies = () => {
-    //     const tokenCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('token='));
-    //     console.log("token cookie", tokenCookie);
-    //     const token = tokenCookie ? tokenCookie.split('=')[1] : null;
-    //     return token;
-    // }
     
     const getTokenFromPageURL = () => {
         const token = $page.url.href.split('=')[1];
@@ -127,18 +112,26 @@
         {#if filterCode === 0}
             {#each $tasks as { _id, content, date, last_updated, important, completed }}
                 <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {:else}
+                No tasks
             {/each}
         {:else if  filterCode === 1}
             {#each undoneTasks as { _id, content, date, last_updated, important, completed }}
                 <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {:else}
+                No tasks
             {/each}
         {:else if filterCode === 2}
             {#each importantTasks as { _id, content, date, last_updated, important, completed }}
                 <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {:else}
+                No tasks
             {/each}
         {:else}
             {#each completedTasks as { _id, content, date, last_updated, important, completed }}
                 <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {:else}
+                No tasks
             {/each}
         {/if}
     {/await}
@@ -147,7 +140,7 @@
 <Drawer />
 <Settings />
 
-<p style="padding-inline: 1rem;">v 1.5.10</p>
+<p style="padding-inline: 1rem;">v 1.5.11</p>
 
 <style>
     .task-container {
