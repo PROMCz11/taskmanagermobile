@@ -149,7 +149,7 @@
 <Drawer />
 <Settings />
 
-<p style="padding-inline: 1rem;">v 1.2.10</p>
+<p style="padding-inline: 1rem;">v 1.3.10</p>
 
 <style>
     .task-container {
