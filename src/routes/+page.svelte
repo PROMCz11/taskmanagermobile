@@ -1,12 +1,19 @@
 <script>
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
-    // import { isDrawerActive } from "$lib/stores";
+    import { isSettingsActive } from "$lib/stores";
     import { tasks } from "$lib/stores";
+    import { accountInformation } from "$lib/stores";
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
+	import Settings from "../lib/Settings.svelte";
 
     // $: console.log($tasks);
+
+    const getUserInfo = (jsonData) => {
+        $accountInformation.username = jsonData.name;
+        $accountInformation.email = jsonData.email;
+    }
 
     const getTasksFromServer = async () => {
         const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
@@ -17,6 +24,9 @@
             headers: {"Content-type": "application/json; charset=UTF-8"}
         });
         const json = await res.json();
+
+        getUserInfo(json.data);
+
         $tasks = json.data.tasks;
     }
 
@@ -89,8 +99,14 @@
 
 <div class="controls">
     <div class="navbar">
-        <button class="settings"><img src={settingsIconSrc} alt="settings"></button>
-        <p>Zain's Tasks</p>
+        <button on:click={() => $isSettingsActive = true} class="settings"><img src={settingsIconSrc} alt="settings"></button>
+        <p>
+            {#if $accountInformation.username}
+                {$accountInformation.username.split(" ")[0]}'s Tasks
+            {:else}
+                Loading...
+            {/if}
+        </p>
         <div class="filters">
             <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                 <img src={allTasksIconSrc} alt="all tasks">
@@ -131,8 +147,9 @@
 </div>
 
 <Drawer />
+<Settings />
 
-<p style="padding-inline: 1rem;">v 1.2.9</p>
+<p style="padding-inline: 1rem;">v 1.2.10</p>
 
 <style>
     .task-container {

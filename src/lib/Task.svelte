@@ -109,9 +109,9 @@
         border-color: red;
     }
 
-    .task.completed {
+    /* .task.completed {
         border-color: green;
-    }
+    } */
 
     .task.completed .content {
         text-decoration: line-through;
