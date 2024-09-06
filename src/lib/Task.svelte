@@ -93,6 +93,8 @@
         display: flex;
         gap: .5rem;
         align-items: center;
+
+        animation: task-fade-in 200ms ease-in-out;
     }
 
     .content {
@@ -106,10 +108,10 @@
     .task.important {
         border-color: red;
     }
-/* 
+
     .task.completed {
         border-color: green;
-    } */
+    }
 
     .task.completed .content {
         text-decoration: line-through;
@@ -117,5 +119,10 @@
 
     .completed-toggle {
         margin-left: auto;
+    }
+
+    @keyframes task-fade-in {
+        from {opacity: 0;}
+        to {opacity: 1;}
     }
 </style>

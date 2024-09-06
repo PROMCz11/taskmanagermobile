@@ -6,7 +6,7 @@
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
 
-    $: console.log($tasks);
+    // $: console.log($tasks);
 
     const getTasksFromServer = async () => {
         const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
@@ -52,28 +52,36 @@
 
     let filterCode = 1;
 
-    const filterTasks = () => {
-        // Code 0: all tasks
-        // Code 1: undone tasks
-        // Code 2: important tasks
-        // Code 3: completed tasks
+    $: undoneTasks = $tasks.filter(task => !task.completed).map(task => task);
 
-        switch (filterCode) {
-            case 0:
-                return $tasks;
-            case 1:
-                return $tasks.filter(task => !task.completed)
-            case 2:
-                return $tasks.filter(task => !task.completed && task.important);
-            case 3:
-                return $tasks.filter(task => task.completed);
+    $: importantTasks = $tasks.filter(task => !task.completed && task.important).map(task => task);
+
+    $: completedTasks = $tasks.filter(task => task.completed).map(task => task);
+
+    // const filterTasks = () => {
+    //     // Code 0: all tasks
+    //     // Code 1: undone tasks
+    //     // Code 2: important tasks
+    //     // Code 3: completed tasks
+
+    //     // console.log("Filtered");
+
+    //     switch (filterCode) {
+    //         case 0:
+    //             return $tasks;
+    //         case 1:
+    //             return $tasks.filter(task => !task.completed).map(task => task);
+    //         case 2:
+    //             return $tasks.filter(task => !task.completed && task.important).map(task => task);
+    //         case 3:
+    //             return $tasks.filter(task => task.completed).map(task => task);
         
-            default:
-                break;
-        }
-    }
+    //         default:
+    //             break;
+    //     }
+    // }
 
-    $: filterTasks(filterCode);
+    // $: filterTasks(filterCode);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -102,15 +110,29 @@
     {#await getTasksFromServer()}
         Loading...
     {:then}
-        {#each filterTasks(filterCode) as { _id, content, date, last_updated, important, completed }}
-            <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
-        {/each}
+        {#if filterCode === 0}
+            {#each $tasks as { _id, content, date, last_updated, important, completed }}
+                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+            {/each}
+        {:else if  filterCode === 1}
+            {#each undoneTasks as { _id, content, date, last_updated, important, completed }}
+                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+            {/each}
+        {:else if filterCode === 2}
+            {#each importantTasks as { _id, content, date, last_updated, important, completed }}
+                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+            {/each}
+        {:else}
+            {#each completedTasks as { _id, content, date, last_updated, important, completed }}
+                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+            {/each}
+        {/if}
     {/await}
 </div>
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.6</p>
+<p style="padding-inline: 1rem;">v 1.2.7</p>
 
 <style>
     .task-container {
