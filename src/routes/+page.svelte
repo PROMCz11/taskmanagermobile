@@ -92,12 +92,12 @@
         <button class="settings"><img src={settingsIconSrc} alt="settings"></button>
         <p>Zain's Tasks</p>
         <div class="filters">
-            <button on:click={() => filterCode = 0} class="all-filter">
+            <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                 <img src={allTasksIconSrc} alt="all tasks">
             </button>
-            <button on:click={() => filterCode = 1} class="undone-filter active circle"></button>
-            <button on:click={() => filterCode = 2} class="important-filter circle"></button>
-            <button on:click={() => filterCode = 3} class="completed-filter circle"></button>
+            <button on:click={() => filterCode = 1} class="undone-filter circle" class:active={filterCode === 1}></button>
+            <button on:click={() => filterCode = 2} class="important-filter circle" class:active={filterCode === 2}></button>
+            <button on:click={() => filterCode = 3} class="completed-filter circle" class:active={filterCode === 3}></button>
         </div>
     </div>
     <input on:change={e => {
@@ -132,7 +132,7 @@
 
 <Drawer />
 
-<p style="padding-inline: 1rem;">v 1.2.8</p>
+<p style="padding-inline: 1rem;">v 1.2.9</p>
 
 <style>
     .task-container {
