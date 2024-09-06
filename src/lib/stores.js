@@ -26,4 +26,6 @@ export let appearanceData = writable([
     {name: "Grape", code: 8, hex: "#5D0E41"},
     {name: "Baby Pink", code: 9, hex: "#FCB1B1"},
     {name: "Silver", code: 10, hex: "#D4D5D9"},
-])
+]);
+
+export let token = writable("");

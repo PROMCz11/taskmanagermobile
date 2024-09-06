@@ -4,12 +4,13 @@
     import exitIconSrc from "$lib/assets/exit-icon.svg";
     import { accountInformation } from "$lib/stores";
     import { appearanceData } from "$lib/stores";
+    import { token } from "$lib/stores";
 
     const updateUsername = (newName) => {
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                token: $token,
                 name: newName
             }),
             headers: {
@@ -22,7 +23,7 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                token: $token,
                 email: newEmail
             }),
             headers: {
@@ -35,7 +36,7 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                token: $token,
                 password: newPassword
             }),
             headers: {

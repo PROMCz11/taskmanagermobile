@@ -7,6 +7,7 @@
 
     import { isDrawerActive } from "$lib/stores";
     import { IDForDrawer } from "$lib/stores";
+    import { token } from "$lib/stores";
 
     const getFormattedLocalTime = (millisecondsSinceEpoch) => {
         const dateFromMilliseconds = new Date(millisecondsSinceEpoch);
@@ -35,7 +36,7 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                token: $token,
                 completed: completed,
                 last_updated: last_updated
             }),
@@ -62,7 +63,7 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+                token: $token,
                 content: newContent,
                 last_updated: last_updated
             }),

@@ -7,9 +7,9 @@
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
 	import Settings from "../lib/Settings.svelte";
-
-    // $: console.log($tasks);
-
+    import { token } from "$lib/stores";
+    import { page } from '$app/stores';
+    import { onMount } from "svelte";
     const getUserInfo = (jsonData) => {
         $accountInformation.username = jsonData.name;
         $accountInformation.email = jsonData.email;
@@ -19,7 +19,7 @@
         const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
             method: "POST",
             body: JSON.stringify({
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q"
+                token: $token
             }),
             headers: {"Content-type": "application/json; charset=UTF-8"}
         });
@@ -35,7 +35,7 @@
         fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks/add", {
             method: "POST",
             body: JSON.stringify({
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI2NmQwOWJkY2Q2MDIyYTZhOTc5OTY4YWYiLCJpYXQiOjE3MjQ5NjQ4NTMsImV4cCI6NDMxNjk2NDg1M30.0HquznnuvoYXtpZrtBsnpdCBZvPqcWpzS_vBTZx3v_Q",
+            token: $token,
             content: content,
             date: date,
             important: false,
@@ -61,37 +61,35 @@
     }
 
     let filterCode = 1;
-
     $: undoneTasks = $tasks.filter(task => !task.completed);
-
     $: importantTasks = $tasks.filter(task => !task.completed && task.important);
-
     $: completedTasks = $tasks.filter(task => task.completed);
 
-    // const filterTasks = () => {
-    //     // Code 0: all tasks
-    //     // Code 1: undone tasks
-    //     // Code 2: important tasks
-    //     // Code 3: completed tasks
+    // There has to be token cookies handling within this page, use query strings in the url to achieve the result
 
-    //     // console.log("Filtered");
-
-    //     switch (filterCode) {
-    //         case 0:
-    //             return $tasks;
-    //         case 1:
-    //             return $tasks.filter(task => !task.completed).map(task => task);
-    //         case 2:
-    //             return $tasks.filter(task => !task.completed && task.important).map(task => task);
-    //         case 3:
-    //             return $tasks.filter(task => task.completed).map(task => task);
-        
-    //         default:
-    //             break;
-    //     }
+    // const insertTokenIntoCookies = token => {
+    //     const expiryDate = new Date();
+    //     expiryDate.setMonth(expiryDate.getMonth() + 1);
+    //     document.cookie = `token=${token}; expires=${expiryDate.toUTCString()}`;
     // }
 
-    // $: filterTasks(filterCode);
+    // const getTokenFromCookies = () => {
+    //     const tokenCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('token='));
+    //     console.log("token cookie", tokenCookie);
+    //     const token = tokenCookie ? tokenCookie.split('=')[1] : null;
+    //     return token;
+    // }
+    
+    const getTokenFromPageURL = () => {
+        const token = $page.url.href.split('=')[1];
+        return token;
+    }
+
+    const handleTokenAssignment = () => {
+        $token = getTokenFromPageURL();
+    }
+
+    handleTokenAssignment();
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -149,7 +147,7 @@
 <Drawer />
 <Settings />
 
-<p style="padding-inline: 1rem;">v 1.4.10</p>
+<p style="padding-inline: 1rem;">v 1.5.10</p>
 
 <style>
     .task-container {
