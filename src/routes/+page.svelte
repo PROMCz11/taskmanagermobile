@@ -62,11 +62,11 @@
 
     let filterCode = 1;
 
-    $: undoneTasks = $tasks.filter(task => !task.completed).map(task => task);
+    $: undoneTasks = $tasks.filter(task => !task.completed);
 
-    $: importantTasks = $tasks.filter(task => !task.completed && task.important).map(task => task);
+    $: importantTasks = $tasks.filter(task => !task.completed && task.important);
 
-    $: completedTasks = $tasks.filter(task => task.completed).map(task => task);
+    $: completedTasks = $tasks.filter(task => task.completed);
 
     // const filterTasks = () => {
     //     // Code 0: all tasks
@@ -149,7 +149,7 @@
 <Drawer />
 <Settings />
 
-<p style="padding-inline: 1rem;">v 1.3.10</p>
+<p style="padding-inline: 1rem;">v 1.4.10</p>
 
 <style>
     .task-container {
