@@ -136,7 +136,7 @@
     }
 
     .drawer {
-        background-color: #1A1A1A;
+        background-color: var(--clr-primary-dark);
         inset: 60% 0 0 0;
         position: fixed;
         border-top-right-radius: 1rem;
@@ -163,11 +163,11 @@
     }
     
     .important-indicator.active .circle {
-        background-color: red;
+        background-color: var(--clr-accent);
     }
     
     .completed-indicator.active .circle {
-        background-color: green;
+        background-color: var(--clr-green);
     }
 
     .important-indicator,
@@ -176,13 +176,13 @@
         align-items: center;
         gap: .5rem;
         padding: .6rem;
-        background-color: #222222;
+        background-color: var(--clr-primary-light);
         max-width: max-content;
         border-radius: 1rem;
     }
 
     button.delete {
-        color: #FC4850;
+        color: var(--clr-red);
         display: flex;
         align-items: center;
         max-width: max-content;

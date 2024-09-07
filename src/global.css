@@ -59,7 +59,15 @@ select {
 /* Styles              */
 /* ------------------- */
 
-/* Don't forget to create a color variable library */
+:root {
+    --clr-primary-dark: #1A1A1A;
+    --clr-primary-light: #222222;
+    --clr-accent: #FFC107;
+    --clr-red: #FC4850;
+    --clr-green: #00FF37;
+    --clr-white: #E8EAED;
+    --clr-text-gray: #757575;
+}
 
 body {
     background-color: black;

@@ -12,7 +12,7 @@ export let accountInformation = writable({
     username: "",
     email: "",
     appearanceCode: 1,
-    // There're more to come (the apperance and autoComplete codes)
+    // auto-complete code
 });
 
 export let appearanceData = writable([

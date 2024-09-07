@@ -4,15 +4,17 @@
     import { isSettingsActive } from "$lib/stores";
     import { tasks } from "$lib/stores";
     import { accountInformation } from "$lib/stores";
+    import { appearanceData } from "$lib/stores";
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
 	import Settings from "../lib/Settings.svelte";
     import { token } from "$lib/stores";
     import { page } from '$app/stores';
-    import { onMount } from "svelte";
+    
     const getUserInfo = (jsonData) => {
         $accountInformation.username = jsonData.name;
         $accountInformation.email = jsonData.email;
+        $accountInformation.appearanceCode = jsonData.appearance
     }
 
     const getTasksFromServer = async () => {
@@ -80,67 +82,69 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 
-<div class="controls">
-    <div class="navbar">
-        <button on:click={() => $isSettingsActive = true} class="settings"><img src={settingsIconSrc} alt="settings"></button>
-        <p>
-            {#if $accountInformation.username}
-                {$accountInformation.username.split(" ")[0]}'s Tasks
-            {:else}
-                Loading...
-            {/if}
-        </p>
-        <div class="filters">
-            <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
-                <img src={allTasksIconSrc} alt="all tasks">
-            </button>
-            <button on:click={() => filterCode = 1} class="undone-filter circle" class:active={filterCode === 1}></button>
-            <button on:click={() => filterCode = 2} class="important-filter circle" class:active={filterCode === 2}></button>
-            <button on:click={() => filterCode = 3} class="completed-filter circle" class:active={filterCode === 3}></button>
+<div style={`--clr-accent: ${$appearanceData[$accountInformation.appearanceCode - 1].hex}`}>
+    <div class="controls">
+        <div class="navbar">
+            <button on:click={() => $isSettingsActive = true} class="settings"><img src={settingsIconSrc} alt="settings"></button>
+            <p>
+                {#if $accountInformation.username}
+                    {$accountInformation.username.split(" ")[0]}'s Tasks
+                {:else}
+                    Loading...
+                {/if}
+            </p>
+            <div class="filters">
+                <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
+                    <img src={allTasksIconSrc} alt="all tasks">
+                </button>
+                <button on:click={() => filterCode = 1} class="undone-filter circle" class:active={filterCode === 1}></button>
+                <button on:click={() => filterCode = 2} class="important-filter circle" class:active={filterCode === 2}></button>
+                <button on:click={() => filterCode = 3} class="completed-filter circle" class:active={filterCode === 3}></button>
+            </div>
         </div>
+        <input on:change={e => {
+                addTask(e.target.value);
+                e.target.value = "";
+            }} class="task-input" placeholder="Enter a task..." type="text">
     </div>
-    <input on:change={e => {
-            addTask(e.target.value);
-            e.target.value = "";
-        }} class="task-input" placeholder="Enter a task..." type="text">
+    
+    <div class="task-container">
+        {#await getTasksFromServer()}
+            Loading...
+        {:then}
+            {#if filterCode === 0}
+                {#each $tasks as { _id, content, date, last_updated, important, completed }}
+                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                    {:else}
+                    No tasks
+                {/each}
+            {:else if  filterCode === 1}
+                {#each undoneTasks as { _id, content, date, last_updated, important, completed }}
+                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                    {:else}
+                    No tasks
+                {/each}
+            {:else if filterCode === 2}
+                {#each importantTasks as { _id, content, date, last_updated, important, completed }}
+                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                    {:else}
+                    No tasks
+                {/each}
+            {:else}
+                {#each completedTasks as { _id, content, date, last_updated, important, completed }}
+                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                    {:else}
+                    No tasks
+                {/each}
+            {/if}
+        {/await}
+    </div>
+    
+    <Drawer />
+    <Settings />
+    
+    <p style="padding-inline: 1rem;">v 1.6.11</p>
 </div>
-
-<div class="task-container">
-    {#await getTasksFromServer()}
-        Loading...
-    {:then}
-        {#if filterCode === 0}
-            {#each $tasks as { _id, content, date, last_updated, important, completed }}
-                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
-                {:else}
-                No tasks
-            {/each}
-        {:else if  filterCode === 1}
-            {#each undoneTasks as { _id, content, date, last_updated, important, completed }}
-                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
-                {:else}
-                No tasks
-            {/each}
-        {:else if filterCode === 2}
-            {#each importantTasks as { _id, content, date, last_updated, important, completed }}
-                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
-                {:else}
-                No tasks
-            {/each}
-        {:else}
-            {#each completedTasks as { _id, content, date, last_updated, important, completed }}
-                <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
-                {:else}
-                No tasks
-            {/each}
-        {/if}
-    {/await}
-</div>
-
-<Drawer />
-<Settings />
-
-<p style="padding-inline: 1rem;">v 1.5.11</p>
 
 <style>
     .task-container {
@@ -168,7 +172,7 @@
     .task-input {
         width: 100%;
         padding-inline: .5rem .3rem;
-        background-color: #222222;
+        background-color: var(--clr-primary-light);
         border-radius: .5rem;
         margin-block-start: .5rem;
         color: white;
@@ -195,14 +199,14 @@
     }
 
     .undone-filter {
-        background-color: #222222;
+        background-color: var(--clr-primary-light);
     }
 
     .important-filter {
-        background-color: red;
+        background-color: var(--clr-accent);
     }
 
     .completed-filter {
-        background-color: green;
+        background-color: var(--clr-green);
     }
 </style>

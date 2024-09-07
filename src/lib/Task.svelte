@@ -89,7 +89,7 @@
     .task {
         border: 2px solid transparent;
         border-radius: .5rem;
-        background-color: #222222;
+        background-color: var(--clr-primary-light);
         padding: .5rem;
         display: flex;
         gap: .5rem;
@@ -107,11 +107,11 @@
     }
 
     .task.important {
-        border-color: red;
+        border-color: var(--clr-accent);
     }
 
     /* .task.completed {
-        border-color: green;
+        border-color: var(--clr-green);
     } */
 
     .task.completed .content {

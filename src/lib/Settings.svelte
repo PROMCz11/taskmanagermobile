@@ -44,6 +44,20 @@
             }
         })
     }
+
+    const updateAppearance = code => {
+        $accountInformation.appearanceCode = code
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: $token,
+                appearance: code
+            }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+    }
 </script>
 
 <div class="settings-container" class:active={$isSettingsActive}>
@@ -69,7 +83,7 @@
             <p class="title">Appearance</p>
             <div class="appearance-grid">
                 {#each $appearanceData as { code, hex }}
-                    <button style="background-color: {hex}" class="circle" on:click={() => $accountInformation.appearanceCode = code} class:active={$accountInformation.appearanceCode === code}></button>
+                    <button style="background-color: {hex}" class="circle" on:click={() => updateAppearance(code)} class:active={$accountInformation.appearanceCode === code}></button>
                 {/each}
             </div>
             <p>Selected: {$appearanceData[$accountInformation.appearanceCode - 1].name}</p>
