@@ -3,6 +3,7 @@
     import logoSrc from "$lib/assets/logo.svg";
     import deleteAllSrc from "$lib/assets/delete-all-icon.svg";
     import deleteCompletedSrc from "$lib/assets/delete-completed-icon.svg";
+    import deleteAccountSrc from "$lib/assets/delete-account-icon.svg";
     import exitIconSrc from "$lib/assets/exit-icon.svg";
     import { accountInformation } from "$lib/stores";
     import { appearanceData } from "$lib/stores";
@@ -104,11 +105,30 @@
             "Content-type": "application/json; charset=UTF-8"
             }
         })
-        .then(res => res.json())
-        .then(json => console.log(json))
-        .catch(err => console.log(err))
+        // .then(res => res.json())
+        // .then(json => console.log(json))
+        // .catch(err => console.log(err))
 
         $accountInformation.auto_delete = $accountInformation.auto_delete ? 0 : 1;
+    }
+
+    const deleteAccount = (password) => {
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/delete`, {
+            method: "DELETE",
+            body: JSON.stringify({
+                token: $token,
+                password: password
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(res => res.json())
+        .then(json => {
+            if(json.status) {
+                window.location.href = "https://task-manager-experiment-with-backend.pages.dev/log-in";
+            }
+        })
     }
 </script>
 
@@ -156,6 +176,12 @@
                 Auto delete completed tasks
             </label>
         </div>
+        <div class="setting-group">
+            <button on:click={() => deleteAccount("zain12321")}>
+                <img src={deleteAccountSrc} alt="delete account">
+                <p>Delete account</p>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -175,12 +201,19 @@
     .settings-container.active {
         translate: 0;
     }
+    
+    .settings {
+        overflow: auto;
+        max-height: 100vh;
+        max-height: 100svh;
+    }
 
     .top {
         display: flex;
         gap: .5rem;
         justify-content: space-between;
         align-items: center;
+        padding-bottom: .5rem;
     }
 
     .top img {
