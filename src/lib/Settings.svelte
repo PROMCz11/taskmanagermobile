@@ -196,18 +196,20 @@
         /* translate: 0; */
 
         padding: .5rem;
+
+        overflow: auto;
     }
 
     .settings-container.active {
         translate: 0;
     }
     
-    .settings {
+    /* .settings {
         overflow: auto;
         max-height: 100vh;
         max-height: 100svh;
         max-height: 90svh;
-    }
+    } */
 
     .top {
         display: flex;
