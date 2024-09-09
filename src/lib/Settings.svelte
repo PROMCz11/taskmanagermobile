@@ -206,6 +206,7 @@
         overflow: auto;
         max-height: 100vh;
         max-height: 100svh;
+        max-height: 90svh;
     }
 
     .top {
