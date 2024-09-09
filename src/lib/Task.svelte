@@ -8,6 +8,10 @@
     import { isDrawerActive } from "$lib/stores";
     import { IDForDrawer } from "$lib/stores";
     import { token } from "$lib/stores";
+    import { accountInformation } from "$lib/stores";
+    import { tasks } from "$lib/stores";
+
+    import { fade } from "svelte/transition";
 
     const getFormattedLocalTime = (millisecondsSinceEpoch) => {
         const dateFromMilliseconds = new Date(millisecondsSinceEpoch);
@@ -31,19 +35,36 @@
     }
 
     const toggleCompleted = () => {
-        completed = !completed;
-        last_updated = new Date().getTime();
-        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-            method: "PATCH",
-            body: JSON.stringify({
-                token: $token,
-                completed: completed,
-                last_updated: last_updated
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+        if($accountInformation.auto_delete && !completed) {
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+                method: "DELETE",
+                body: JSON.stringify({
+                    token: $token,
+                    ids: [_id]
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+
+            $tasks = $tasks.filter(task => task._id != _id);
+        }
+        
+        else {
+            completed = !completed;
+            last_updated = new Date().getTime();
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    token: $token,
+                    completed: completed,
+                    last_updated: last_updated
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+        }
     }
 
     const handleInput = e => {
@@ -76,7 +97,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div id={_id} class="task" class:important class:completed>
+<div id={_id} class="task" class:important class:completed transition:fade={{duration: 300}}>
     <button on:click={openDrawer}><img src={menuIconSrc} alt="menu"></button>
     <div>
         <p on:keydown={e => handleInput(e)} on:blur={e => blurHandler(e)} class="content" bind:textContent={content} contenteditable></p>
@@ -95,7 +116,7 @@
         gap: .5rem;
         align-items: center;
 
-        animation: task-fade-in 200ms ease-in-out;
+        /* animation: task-fade-in 200ms ease-in-out; */
     }
 
     .content {
@@ -122,8 +143,8 @@
         margin-left: auto;
     }
 
-    @keyframes task-fade-in {
+    /* @keyframes task-fade-in {
         from {opacity: 0;}
         to {opacity: 1;}
-    }
+    } */
 </style>

@@ -5,6 +5,7 @@
     import { tasks } from "$lib/stores";
     import deleteIconSrc from "$lib/assets/delete-icon.svg"
     import { token } from "$lib/stores";
+    import { accountInformation } from "$lib/stores";
 
     const closeDrawer = e => {
         if(e.target.classList.contains("drawer-wrapper") && $isDrawerActive) {
@@ -61,23 +62,29 @@
     }
 
     const toggleCompleted = () => {
-        $tasks[index].completed = !$tasks[index].completed;
-        const last_updated = new Date().getTime();
-        $tasks[index].last_updated = last_updated;
-        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-            method: "PATCH",
-            body: JSON.stringify({
-                token: $token,
-                completed: $tasks[index].completed,
-                last_updated: last_updated
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+        if($accountInformation.auto_delete && !completed) {
+            deleteTask([_id]);
+        }
+
+        else {
+            $tasks[index].completed = !$tasks[index].completed;
+            const last_updated = new Date().getTime();
+            $tasks[index].last_updated = last_updated;
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    token: $token,
+                    completed: $tasks[index].completed,
+                    last_updated: last_updated
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+        }
     }
 
-    const deleteTask = (toBeDeletedArray) => {
+    const deleteTask = (toBeDeletedIDSArray) => {
 
         $isDrawerActive = false;
 
@@ -85,15 +92,15 @@
             method: "DELETE",
             body: JSON.stringify({
                 token: $token,
-                ids: toBeDeletedArray
+                ids: toBeDeletedIDSArray
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
         })
-        .then(res => res.json())
-        .then(json => console.log(json))
-        .catch(err => console.log(err))
+        // .then(res => res.json())
+        // .then(json => console.log(json))
+        // .catch(err => console.log(err))
 
         const _idShell = _id;
         $IDForDrawer = "";

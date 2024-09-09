@@ -15,6 +15,8 @@
         $accountInformation.username = jsonData.name;
         $accountInformation.email = jsonData.email;
         $accountInformation.appearanceCode = jsonData.appearance
+        $accountInformation.auto_delete = jsonData.auto_delete
+        console.log(jsonData.auto_delete);
     }
 
     const getTasksFromServer = async () => {
@@ -113,25 +115,25 @@
             Loading...
         {:then}
             {#if filterCode === 0}
-                {#each $tasks as { _id, content, date, last_updated, important, completed }}
+                {#each $tasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     No tasks
                 {/each}
             {:else if  filterCode === 1}
-                {#each undoneTasks as { _id, content, date, last_updated, important, completed }}
+                {#each undoneTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     No tasks
                 {/each}
             {:else if filterCode === 2}
-                {#each importantTasks as { _id, content, date, last_updated, important, completed }}
+                {#each importantTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     No tasks
                 {/each}
             {:else}
-                {#each completedTasks as { _id, content, date, last_updated, important, completed }}
+                {#each completedTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     No tasks
@@ -143,7 +145,7 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.6.12</p>
+    <p style="padding-inline: 1rem;">v 1.7.12</p>
 </div>
 
 <style>

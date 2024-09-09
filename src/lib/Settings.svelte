@@ -1,10 +1,13 @@
 <script>
     import { isSettingsActive } from "$lib/stores";
     import logoSrc from "$lib/assets/logo.svg";
+    import deleteAllSrc from "$lib/assets/delete-all-icon.svg";
+    import deleteCompletedSrc from "$lib/assets/delete-completed-icon.svg";
     import exitIconSrc from "$lib/assets/exit-icon.svg";
     import { accountInformation } from "$lib/stores";
     import { appearanceData } from "$lib/stores";
     import { token } from "$lib/stores";
+    import { tasks } from "$lib/stores";
 
     const updateUsername = (newName) => {
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
@@ -58,6 +61,55 @@
             }
         })
     }
+
+    const deleteAllTasks = () => {
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+            method: "DELETE",
+            body: JSON.stringify({
+            token: $token,
+            ids: $tasks.map(task => task._id)
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+
+        $tasks = [];
+    }
+
+    const deleteCompletedTasks = () => {
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+            method: "DELETE",
+            body: JSON.stringify({
+            token: $token,
+            ids: $tasks.filter(task => task.completed).map(task => task._id)
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+
+        $tasks = $tasks.filter(task => !task.completed);
+    }
+
+    const toggleAutoDelete = () => {
+        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                token: $token,
+                auto_delete: $accountInformation.auto_delete ? 0 : 1
+                // auto_delete: !$accountInformation.auto_delete
+            }),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(res => res.json())
+        .then(json => console.log(json))
+        .catch(err => console.log(err))
+
+        $accountInformation.auto_delete = $accountInformation.auto_delete ? 0 : 1;
+    }
 </script>
 
 <div class="settings-container" class:active={$isSettingsActive}>
@@ -87,6 +139,22 @@
                 {/each}
             </div>
             <p>Selected: {$appearanceData[$accountInformation.appearanceCode - 1].name}</p>
+        </div>
+        <div class="setting-group">
+            <button on:click={deleteAllTasks}>
+                <img src={deleteAllSrc} alt="delete all tasks">
+                <p>Delete all tasks</p>
+            </button>
+            <button on:click={deleteCompletedTasks}>
+                <img src={deleteCompletedSrc} alt="delete completed tasks">
+                <p>Delete completed tasks</p>
+            </button>
+        </div>
+        <div class="setting-group">
+            <label for="auto-delete">
+                <input type="checkbox" name="" id="auto-delete" on:change={toggleAutoDelete} checked={$accountInformation.auto_delete ? true : false}>
+                Auto delete completed tasks
+            </label>
         </div>
     </div>
 </div>
@@ -129,7 +197,7 @@
         font-size: 1.6rem;
     }
 
-    input {
+    input:not([type="checkbox"]) {
         background-color: transparent;
         border: 0;
         color: white;
@@ -155,4 +223,15 @@
     .appearance-grid .circle.active {
         border: 3px solid white;
     }
+
+    .setting-group {
+        margin-block: 1.5rem;
+    }
+
+    .setting-group > button {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--clr-red);
+        }
 </style>
