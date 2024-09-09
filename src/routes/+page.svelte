@@ -42,8 +42,8 @@
             token: $token,
             content: content,
             date: date,
-            important: false,
-            completed: false
+            important: filterCode === 2 ? true : false,
+            completed: filterCode === 3 ? true : false
             }),
             headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -56,8 +56,8 @@
                 content: content,
                 date: date,
                 last_updated: date,
-                completed: false,
-                important: false
+                completed: filterCode === 3 ? true : false,
+                important: filterCode === 2 ? true : false
             }
 
             $tasks = [...$tasks, newTask];
