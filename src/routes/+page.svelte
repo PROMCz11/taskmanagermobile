@@ -145,7 +145,7 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.7.17</p>
+    <p style="padding-inline: 1rem;">v 1.7.18</p>
 </div>
 
 <style>
