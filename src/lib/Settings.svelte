@@ -181,7 +181,7 @@
         <div class="setting-group" style="position: relative;">
             {#if isDeleteAccountModalActive}
                 <div>
-                    <input type="text" placeholder="Enter password to confirm" on:input={e => {
+                    <input type="text" placeholder="Enter password to confirm" on:keydown={e => {
                         if(e.key === "Enter") {
                             deleteAccount(e.target.value);
                         }
