@@ -10,6 +10,8 @@
     import { token } from "$lib/stores";
     import { tasks } from "$lib/stores";
 
+    let isDeleteAccountModalActive = false;
+
     const updateUsername = (newName) => {
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
@@ -176,11 +178,22 @@
                 Auto delete completed tasks
             </label>
         </div>
-        <div class="setting-group">
-            <button on:click={() => deleteAccount("zain12321")}>
-                <img src={deleteAccountSrc} alt="delete account">
-                <p>Delete account</p>
-            </button>
+        <div class="setting-group" style="position: relative;">
+            {#if isDeleteAccountModalActive}
+                <div>
+                    <input type="text" placeholder="Enter password to confirm" on:input={e => {
+                        if(e.key === "Enter") {
+                            deleteAccount(e.target.value);
+                        }
+                    }}>
+                    <button on:click={() => isDeleteAccountModalActive = false}>Cancel</button>
+                </div>
+            {:else}
+                <button on:click={() => isDeleteAccountModalActive = true}>
+                    <img src={deleteAccountSrc} alt="delete account">
+                    <p>Delete account</p>
+                </button>
+            {/if}
         </div>
     </div>
 </div>
