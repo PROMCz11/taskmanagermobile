@@ -215,6 +215,8 @@
         padding: .5rem;
 
         overflow: auto;
+
+        z-index: 2;
     }
 
     .settings-container.active {
