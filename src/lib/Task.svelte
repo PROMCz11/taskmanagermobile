@@ -10,6 +10,8 @@
     import { token } from "$lib/stores";
     import { accountInformation } from "$lib/stores";
     import { tasks } from "$lib/stores";
+    import { isClientOnline } from '$lib/stores';
+    import { offlineData } from '$lib/stores';
 
     import { fade } from "svelte/transition";
 
@@ -35,35 +37,64 @@
     }
 
     const toggleCompleted = () => {
-        if($accountInformation.auto_delete && !completed) {
-            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
-                method: "DELETE",
-                body: JSON.stringify({
-                    token: $token,
-                    ids: [_id]
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            })
+        if($isClientOnline) {
+            if($accountInformation.auto_delete && !completed) {
+                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        token: $token,
+                        ids: [_id]
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                })
 
-            $tasks = $tasks.filter(task => task._id != _id);
+                $tasks = $tasks.filter(task => task._id != _id);
+            }
+            
+            else {
+                completed = !completed;
+                last_updated = new Date().getTime();
+                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        token: $token,
+                        completed: completed,
+                        last_updated: last_updated
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                })
+            }
         }
-        
+
         else {
-            completed = !completed;
-            last_updated = new Date().getTime();
-            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-                method: "PATCH",
-                body: JSON.stringify({
-                    token: $token,
-                    completed: completed,
-                    last_updated: last_updated
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+            if($accountInformation.auto_delete && !completed) {
+                $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, _id];
+
+                $tasks = $tasks.filter(task => task._id != _id);
+            }
+
+            else {
+                completed = !completed;
+                last_updated = new Date().getTime();
+
+                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+                if(indexOfPreviouslyUpdatedTask === -1) {
+                    const newUpdatedTask = {
+                        "_id": _id,
+                        "completed": completed,
+                        "last_updated": last_updated
+                    }
+                    $offlineData.updatedWhileOfflineTasksArray = [...$offlineData.updatedWhileOfflineTasksArray, newUpdatedTask];
                 }
-            })
+                else {
+                    $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].completed = completed;
+                    $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].last_updated = last_updated;
+                }
+            }
         }
     }
 
@@ -80,18 +111,38 @@
     }
 
     const updateTaskContent = (newContent) => {
-        last_updated = new Date().getTime();
-        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-            method: "PATCH",
-            body: JSON.stringify({
-                token: $token,
-                content: newContent,
-                last_updated: last_updated
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
+        if($isClientOnline) {
+            last_updated = new Date().getTime();
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    token: $token,
+                    content: newContent,
+                    last_updated: last_updated
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+        }
+
+        else {
+            last_updated = new Date().getTime();
+
+            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+            if(indexOfPreviouslyUpdatedTask === -1) {
+                const newUpdatedTask = {
+                    "_id": _id,
+                    "content": newContent,
+                    "last_updated": last_updated
+                }
+                $offlineData.updatedWhileOfflineTasksArray = [...$offlineData.updatedWhileOfflineTasksArray, newUpdatedTask];
             }
-        })
+            else {
+                $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].content = newContent;
+                $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].last_updated = last_updated;
+            }
+        }
     }
 </script>
 

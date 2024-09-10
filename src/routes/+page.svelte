@@ -1,4 +1,6 @@
 <script>
+    // TODO:
+    // Prevent access to settings when in offline mode
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
     import { isSettingsActive } from "$lib/stores";
@@ -11,6 +13,53 @@
     import { token } from "$lib/stores";
     import { page } from '$app/stores';
     import { isClientOnline } from '$lib/stores';
+    import { offlineData } from '$lib/stores';
+
+    $: {
+        if($isClientOnline) {sync()}
+    };
+
+    const sync = () => {
+        const addArray = $tasks.filter(task => task._id.includes("-fake-id"));
+        const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task._id) && !task._id.includes("-fake-id"));
+        const deleteArray = $offlineData.deletedWhileOfflineIDS.filter(taskID => !taskID.includes("-fake-id"));
+        
+        if(addArray.length || updateArray.length || deleteArray.length) {
+            addArray.forEach(task => {
+                delete task.UserId;
+                delete task.__v;
+                delete task.last_updated;
+            });
+            fetch("https://task-manager-back-end-7gbe.onrender.com/api/offline", {
+                method: "POST",
+                body: JSON.stringify({
+                token: $token,
+                addArray: addArray,
+                updateArray: updateArray,
+                deleteArray: deleteArray
+                }),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then(res => res.json())
+            .then(json => {
+
+                $offlineData.updatedWhileOfflineTasksArray = [];
+                $offlineData.deletedWhileOfflineIDS = [];
+
+                if(json.data) {
+
+                    const idPairsArray = json.data.idPairs;
+                    idPairsArray.forEach(pair => {
+                        const fakeTaskIndex = $tasks.findIndex(task => task._id === pair.fakeID);
+                        $tasks[fakeTaskIndex]._id = pair.realID;
+                    })
+                }
+            })
+            .catch(err => console.log(err));
+        }
+    }
     
     const getUserInfo = (jsonData) => {
         $accountInformation.username = jsonData.name;
@@ -36,23 +85,38 @@
 
     const addTask = (content) => {
         const date = new Date().getTime();
-        fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks/add", {
-            method: "POST",
-            body: JSON.stringify({
-            token: $token,
-            content: content,
-            date: date,
-            important: filterCode === 2 ? true : false,
-            completed: filterCode === 3 ? true : false
-            }),
-            headers: {
-            "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then(res => res.json())
-        .then(json => {
+        if($isClientOnline) {
+            fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks/add", {
+                method: "POST",
+                body: JSON.stringify({
+                token: $token,
+                content: content,
+                date: date,
+                important: filterCode === 2 ? true : false,
+                completed: filterCode === 3 ? true : false
+                }),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+            .then(res => res.json())
+            .then(json => {
+                const newTask = {
+                    _id: json.data.id,
+                    content: content,
+                    date: date,
+                    last_updated: date,
+                    completed: filterCode === 3 ? true : false,
+                    important: filterCode === 2 ? true : false
+                }
+
+                $tasks = [...$tasks, newTask];
+            })
+        }
+
+        else {
             const newTask = {
-                _id: json.data.id,
+                _id: generateFakeID(),
                 content: content,
                 date: date,
                 last_updated: date,
@@ -61,7 +125,7 @@
             }
 
             $tasks = [...$tasks, newTask];
-        })
+        }
     }
 
     let filterCode = 1;
@@ -85,16 +149,14 @@
         do {
             fakeID = Math.floor(100000 + Math.random() * 900000);
         } while ($tasks.map(task => task._id).includes(fakeID));
-        // return fakeID;
-        console.log(fakeID);
+        return fakeID + "-fake-id";
     }
 </script>
-
-<!-- <button on:click={generateFakeID}>Generate ID</button> -->
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 
+<svelte:window bind:online={$isClientOnline}/>
 <div style={`--clr-accent: ${$appearanceData[$accountInformation.appearanceCode - 1].hex}`}>
     <div class="controls">
         <div class="navbar">
@@ -156,9 +218,10 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.7.19</p>
+    <p style="padding-inline: 1rem;">v 1.8.19</p>
+    <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button>
+    <button style="padding-inline: 1rem;" on:click={sync}>Sync</button>
 </div>
-<svelte:window bind:online={$isClientOnline}/>
 
 <style>
     .task-container {

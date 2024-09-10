@@ -6,6 +6,8 @@
     import deleteIconSrc from "$lib/assets/delete-icon.svg"
     import { token } from "$lib/stores";
     import { accountInformation } from "$lib/stores";
+    import { isClientOnline } from '$lib/stores';
+    import { offlineData } from '$lib/stores';
 
     const closeDrawer = e => {
         if(e.target.classList.contains("drawer-wrapper") && $isDrawerActive) {
@@ -45,36 +47,15 @@
     }
 
     const toggleImportant = () => {
-        $tasks[index].important = !$tasks[index].important;
-        const last_updated = new Date().getTime();
-        $tasks[index].last_updated = last_updated;
-        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
-            method: "PATCH",
-            body: JSON.stringify({
-                token: $token,
-                important: $tasks[index].important,
-                last_updated: last_updated
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-    }
-
-    const toggleCompleted = () => {
-        if($accountInformation.auto_delete && !completed) {
-            deleteTask([_id]);
-        }
-
-        else {
-            $tasks[index].completed = !$tasks[index].completed;
+        if($isClientOnline) {
+            $tasks[index].important = !$tasks[index].important;
             const last_updated = new Date().getTime();
             $tasks[index].last_updated = last_updated;
             fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
                 method: "PATCH",
                 body: JSON.stringify({
                     token: $token,
-                    completed: $tasks[index].completed,
+                    important: $tasks[index].important,
                     last_updated: last_updated
                 }),
                 headers: {
@@ -82,25 +63,93 @@
                 }
             })
         }
+
+        else {
+            $tasks[index].important = !$tasks[index].important;
+            const last_updated = new Date().getTime();
+            $tasks[index].last_updated = last_updated;
+
+            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+            if(indexOfPreviouslyUpdatedTask === -1) {
+                const newUpdatedTask = {
+                    "_id": _id,
+                    "important": important,
+                    "last_updated": last_updated
+                }
+                $offlineData.updatedWhileOfflineTasksArray = [...$offlineData.updatedWhileOfflineTasksArray, newUpdatedTask];
+            }
+            else {
+                $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].important = important;
+                $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].last_updated = last_updated;
+            }
+        }
+    }
+
+    const toggleCompleted = () => {
+        if($accountInformation.auto_delete && !completed) {
+            deleteTask([_id]);
+        }
+        
+        else {
+            if($isClientOnline) {
+                $tasks[index].completed = !$tasks[index].completed;
+                const last_updated = new Date().getTime();
+                $tasks[index].last_updated = last_updated;
+                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        token: $token,
+                        completed: $tasks[index].completed,
+                        last_updated: last_updated
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                })
+            }
+
+            else {
+                $tasks[index].completed = !$tasks[index].completed;
+                const last_updated = new Date().getTime();
+                $tasks[index].last_updated = last_updated;
+
+                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+                if(indexOfPreviouslyUpdatedTask === -1) {
+                    const newUpdatedTask = {
+                        "_id": _id,
+                        "completed": completed,
+                        "last_updated": last_updated
+                    }
+                    $offlineData.updatedWhileOfflineTasksArray = [...$offlineData.updatedWhileOfflineTasksArray, newUpdatedTask];
+                }
+                else {
+                    $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].completed = completed;
+                    $offlineData.updatedWhileOfflineTasksArray[indexOfPreviouslyUpdatedTask].last_updated = last_updated;
+                }
+            }
+        }
     }
 
     const deleteTask = (toBeDeletedIDSArray) => {
 
         $isDrawerActive = false;
 
-        fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
-            method: "DELETE",
-            body: JSON.stringify({
-                token: $token,
-                ids: toBeDeletedIDSArray
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        // .then(res => res.json())
-        // .then(json => console.log(json))
-        // .catch(err => console.log(err))
+        if($isClientOnline) {
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
+                method: "DELETE",
+                body: JSON.stringify({
+                    token: $token,
+                    ids: toBeDeletedIDSArray
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+        }
+
+        else {
+            $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, _id];
+        }
 
         const _idShell = _id;
         $IDForDrawer = "";
