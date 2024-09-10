@@ -9,6 +9,7 @@
     import { appearanceData } from "$lib/stores";
     import settingsIconSrc from "$lib/assets/settings-icon.svg";
     import allTasksIconSrc from "$lib/assets/all-tasks-icon.svg";
+    import syncIconSrc from "$lib/assets/sync-icon.svg";
 	import Settings from "../lib/Settings.svelte";
     import { token } from "$lib/stores";
     import { page } from '$app/stores';
@@ -19,12 +20,15 @@
         if($isClientOnline) {sync()}
     };
 
+    let syncing = false;
+
     const sync = () => {
         const addArray = $tasks.filter(task => task._id.includes("-fake-id"));
         const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task._id) && !task._id.includes("-fake-id"));
         const deleteArray = $offlineData.deletedWhileOfflineIDS.filter(taskID => !taskID.includes("-fake-id"));
         
         if(addArray.length || updateArray.length || deleteArray.length) {
+            syncing = true;
             addArray.forEach(task => {
                 delete task.UserId;
                 delete task.__v;
@@ -56,6 +60,8 @@
                         $tasks[fakeTaskIndex]._id = pair.realID;
                     })
                 }
+
+                syncing = false;
             })
             .catch(err => console.log(err));
         }
@@ -218,9 +224,23 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.8.20</p>
+    <p style="padding-inline: 1rem;">v 1.9.20</p>
     <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button>
-    <button style="padding-inline: 1rem;" on:click={sync}>Sync</button>
+
+    <div class="online-status" class:online={$isClientOnline}>
+        {#if $isClientOnline}
+            {#if syncing}
+                <img src={syncIconSrc} alt="syncing icon">
+                Syncing
+            {:else}
+                <div class="circle"></div>
+                Online
+            {/if}
+        {:else}
+            <div class="circle"></div>
+            Offline
+        {/if}
+    </div>
 </div>
 
 <style>
@@ -285,5 +305,40 @@
 
     .completed-filter {
         background-color: var(--clr-green);
+    }
+
+    .online-status {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        position: fixed;
+        left: .5rem;
+        bottom: .5rem;
+        background-color: var(--clr-primary-light);
+        padding: .5rem;
+        border-radius: .5rem;
+    }
+
+    .online-status .circle {
+        background-color: var(--clr-red);
+    }
+
+    .online-status.online .circle {
+        background-color: var(--clr-green);
+    }
+
+    .online-status img {
+        animation: rotate 500ms infinite linear;
+        width: 25px;
+    }
+
+    @keyframes rotate {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: -360deg;
+        }
     }
 </style>
