@@ -218,7 +218,7 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.8.19</p>
+    <p style="padding-inline: 1rem;">v 1.8.20</p>
     <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button>
     <button style="padding-inline: 1rem;" on:click={sync}>Sync</button>
 </div>

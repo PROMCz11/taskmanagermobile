@@ -9,6 +9,7 @@
     import { appearanceData } from "$lib/stores";
     import { token } from "$lib/stores";
     import { tasks } from "$lib/stores";
+    import { isClientOnline } from "$lib/stores";
 
     let isDeleteAccountModalActive = false;
 
@@ -143,6 +144,9 @@
         <button on:click={() => $isSettingsActive = false}><img src={exitIconSrc} alt="exit"></button>
     </div>
     <div class="settings">
+        {#if !$isClientOnline}
+            <div class="settings-disabled">Disabled in Offline Mode</div>
+        {/if}
         <div class="setting-group">
             <p class="title">Account settings</p>
             <p>User name </p>
@@ -178,7 +182,7 @@
                 Auto delete completed tasks
             </label>
         </div>
-        <div class="setting-group" style="position: relative;">
+        <div class="setting-group">
             {#if isDeleteAccountModalActive}
                 <div>
                     <input type="password" placeholder="Enter password to confirm" on:keydown={e => {
@@ -217,12 +221,17 @@
         translate: 0;
     }
     
-    /* .settings {
-        overflow: auto;
-        max-height: 100vh;
-        max-height: 100svh;
-        max-height: 90svh;
-    } */
+    .settings {
+        position: relative;
+    }
+
+    .settings-disabled {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, .8);
+        display: grid;
+        place-content: center;
+    }
 
     .top {
         display: flex;
