@@ -28,4 +28,6 @@ export let appearanceData = writable([
     {name: "Silver", code: 10, hex: "#D4D5D9"},
 ]);
 
+export let isClientOnline = writable();
+
 export let token = writable("");

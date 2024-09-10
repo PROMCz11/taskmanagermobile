@@ -10,13 +10,13 @@
 	import Settings from "../lib/Settings.svelte";
     import { token } from "$lib/stores";
     import { page } from '$app/stores';
+    import { isClientOnline } from '$lib/stores';
     
     const getUserInfo = (jsonData) => {
         $accountInformation.username = jsonData.name;
         $accountInformation.email = jsonData.email;
         $accountInformation.appearanceCode = jsonData.appearance
         $accountInformation.auto_delete = jsonData.auto_delete
-        console.log(jsonData.auto_delete);
     }
 
     const getTasksFromServer = async () => {
@@ -79,7 +79,18 @@
     }
 
     handleTokenAssignment();
+
+    const generateFakeID = () => {
+        let fakeID;
+        do {
+            fakeID = Math.floor(100000 + Math.random() * 900000);
+        } while ($tasks.map(task => task._id).includes(fakeID));
+        // return fakeID;
+        console.log(fakeID);
+    }
 </script>
+
+<!-- <button on:click={generateFakeID}>Generate ID</button> -->
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -145,8 +156,9 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.7.18</p>
+    <p style="padding-inline: 1rem;">v 1.7.19</p>
 </div>
+<svelte:window bind:online={$isClientOnline}/>
 
 <style>
     .task-container {
