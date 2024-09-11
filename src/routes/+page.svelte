@@ -172,7 +172,7 @@
                     Loading...
                 {/if}
             </p>
-            <p class="version">v 1.9.22</p>
+            <p class="version">v 1.9.23</p>
             <div class="filters">
                 <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                     <img src={allTasksIconSrc} alt="all tasks">
