@@ -1,6 +1,4 @@
 <script>
-    // TODO:
-    // Prevent access to settings when in offline mode
     import Task from "$lib/Task.svelte";
     import Drawer from "$lib/Drawer.svelte";
     import { isSettingsActive } from "$lib/stores";
@@ -174,6 +172,7 @@
                     Loading...
                 {/if}
             </p>
+            <p class="version">v 1.9.21</p>
             <div class="filters">
                 <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                     <img src={allTasksIconSrc} alt="all tasks">
@@ -224,7 +223,7 @@
     <Drawer />
     <Settings />
     
-    <p style="padding-inline: 1rem;">v 1.9.21</p>
+    <!-- <p style="padding-inline: 1rem;"></p> -->
     <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button>
 
     <div class="online-status" class:online={$isClientOnline}>
@@ -340,5 +339,10 @@
         to {
             rotate: -360deg;
         }
+    }
+
+    .version {
+        color: var(--clr-text-gray);
+        font-size: 1rem;
     }
 </style>
