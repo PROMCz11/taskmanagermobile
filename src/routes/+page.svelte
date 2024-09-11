@@ -190,31 +190,31 @@
     
     <div class="task-container">
         {#await getTasksFromServer()}
-            Loading...
+            <span class="loader"></span>
         {:then}
             {#if filterCode === 0}
                 {#each $tasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
-                    No tasks
+                    <p>No tasks.</p>
                 {/each}
             {:else if  filterCode === 1}
                 {#each undoneTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
-                    No tasks
+                    <p>No tasks.</p>
                 {/each}
             {:else if filterCode === 2}
                 {#each importantTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
-                    No tasks
+                    <p>No tasks.</p>
                 {/each}
             {:else}
                 {#each completedTasks as { _id, content, date, last_updated, important, completed } (_id)}
                     <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
-                    No tasks
+                    <p>No tasks.</p>
                 {/each}
             {/if}
         {/await}
@@ -248,6 +248,13 @@
         flex-direction: column;
         gap: .5rem;
         padding-inline: .5rem;
+    }
+
+    .task-container > p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
     }
 
     .navbar {
@@ -345,4 +352,29 @@
         color: var(--clr-text-gray);
         font-size: 1rem;
     }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #FFF;
+        border-bottom-color: var(--clr-primary-light);
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: loader-rotation 600ms linear infinite;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+    }
+
+    @keyframes loader-rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    } 
 </style>
