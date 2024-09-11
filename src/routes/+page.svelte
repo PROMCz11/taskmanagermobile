@@ -172,7 +172,7 @@
                     Loading...
                 {/if}
             </p>
-            <p class="version">v 1.9.21</p>
+            <p class="version">v 1.9.22</p>
             <div class="filters">
                 <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                     <img src={allTasksIconSrc} alt="all tasks">
@@ -224,7 +224,7 @@
     <Settings />
     
     <!-- <p style="padding-inline: 1rem;"></p> -->
-    <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button>
+    <!-- <button style="padding-inline: 1rem;" on:click={() => $isClientOnline = !$isClientOnline}>{$isClientOnline ? "Online" : "Offline"}</button> -->
 
     <div class="online-status" class:online={$isClientOnline}>
         {#if $isClientOnline}
