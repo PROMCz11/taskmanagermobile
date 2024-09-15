@@ -54,12 +54,13 @@
             fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
                 method: "PATCH",
                 body: JSON.stringify({
-                    token: $token,
+                    // token: $token,
                     important: $tasks[index].important,
                     last_updated: last_updated
                 }),
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": `Bearer ${$token}`
                 }
             })
         }
@@ -98,12 +99,13 @@
                 fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
                     method: "PATCH",
                     body: JSON.stringify({
-                        token: $token,
+                        // token: $token,
                         completed: $tasks[index].completed,
                         last_updated: last_updated
                     }),
                     headers: {
-                        "Content-type": "application/json; charset=UTF-8"
+                        "Content-type": "application/json; charset=UTF-8",
+                        "Authorization": `Bearer ${$token}`
                     }
                 })
             }
@@ -138,11 +140,12 @@
             fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
                 method: "DELETE",
                 body: JSON.stringify({
-                    token: $token,
+                    // token: $token,
                     ids: toBeDeletedIDSArray
                 }),
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": `Bearer ${$token}`
                 }
             })
         }

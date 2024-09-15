@@ -35,13 +35,14 @@
             fetch("https://task-manager-back-end-7gbe.onrender.com/api/offline", {
                 method: "POST",
                 body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 addArray: addArray,
                 updateArray: updateArray,
                 deleteArray: deleteArray
                 }),
                 headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": `Bearer ${$token}`
                 }
             })
             .then(res => res.json())
@@ -74,11 +75,11 @@
 
     const getTasksFromServer = async () => {
         const res = await fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks", {
-            method: "POST",
-            body: JSON.stringify({
-                token: $token
-            }),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
+            method: "GET",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": `Bearer ${$token}`
+            }
         });
         const json = await res.json();
 
@@ -93,14 +94,15 @@
             fetch("https://task-manager-back-end-7gbe.onrender.com/api/tasks/add", {
                 method: "POST",
                 body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 content: content,
                 date: date,
                 important: filterCode === 2 ? true : false,
                 completed: filterCode === 3 ? true : false
                 }),
                 headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": `Bearer ${$token}`
                 }
             })
             .then(res => res.json())

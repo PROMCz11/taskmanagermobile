@@ -17,11 +17,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 name: newName
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
     }
@@ -30,11 +31,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 email: newEmail
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
     }
@@ -43,11 +45,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 password: newPassword
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
     }
@@ -57,11 +60,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 appearance: code
             }),
             headers: {
-              "Content-type": "application/json; charset=UTF-8"
+              "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
     }
@@ -70,11 +74,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
             method: "DELETE",
             body: JSON.stringify({
-            token: $token,
+            // token: $token,
             ids: $tasks.map(task => task._id)
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
 
@@ -85,11 +90,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/delete`, {
             method: "DELETE",
             body: JSON.stringify({
-            token: $token,
+            // token: $token,
             ids: $tasks.filter(task => task.completed).map(task => task._id)
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
 
@@ -100,12 +106,13 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/update`, {
             method: "PATCH",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 auto_delete: $accountInformation.auto_delete ? 0 : 1
                 // auto_delete: !$accountInformation.auto_delete
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
         // .then(res => res.json())
@@ -119,11 +126,12 @@
         fetch(`https://task-manager-back-end-7gbe.onrender.com/api/user/delete`, {
             method: "DELETE",
             body: JSON.stringify({
-                token: $token,
+                // token: $token,
                 password: password
             }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": `Bearer ${$token}`
             }
         })
         .then(res => res.json())
