@@ -5,6 +5,7 @@
     import deleteCompletedSrc from "$lib/assets/delete-completed-icon.svg";
     import deleteAccountSrc from "$lib/assets/delete-account-icon.svg";
     import exitIconSrc from "$lib/assets/exit-icon.svg";
+    import logoutIconSrc from "$lib/assets/logout-icon.svg";
     import { accountInformation } from "$lib/stores";
     import { appearanceData } from "$lib/stores";
     import { token } from "$lib/stores";
@@ -141,6 +142,10 @@
             }
         })
     }
+
+    const logout = () => {
+        window.location.href = "https://task-manager-experiment-with-backend.pages.dev/log-in";
+    }
 </script>
 
 <div class="settings-container" class:active={$isSettingsActive}>
@@ -207,6 +212,12 @@
                 </button>
             {/if}
         </div>
+        <div class="setting-group">
+            <button on:click={logout}>
+                <img src={logoutIconSrc} alt="log out icon">
+                <p>Logout</p>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -218,7 +229,6 @@
 
         transition: translate 150ms ease-in-out;
         translate: -100% 0;
-        /* translate: 0; */
 
         padding: .5rem;
 
@@ -297,9 +307,9 @@
     }
 
     .setting-group > button {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            color: var(--clr-red);
-        }
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--clr-red);
+    }
 </style>
