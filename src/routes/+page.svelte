@@ -174,7 +174,7 @@
                     Loading...
                 {/if}
             </p>
-            <p class="version">1.11.24</p>
+            <p class="version">1.11.25</p>
             <div class="filters">
                 <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                     <img src={allTasksIconSrc} alt="all tasks">
@@ -250,6 +250,7 @@
         flex-direction: column;
         gap: .5rem;
         padding-inline: .5rem;
+        padding-bottom: 4rem;
     }
 
     .task-container > p {
