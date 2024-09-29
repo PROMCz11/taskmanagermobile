@@ -138,19 +138,19 @@
         .then(res => res.json())
         .then(json => {
             if(json.status) {
-                window.location.href = "https://task-manager-desktop.pages.dev/log-in";
+                logout();
             }
         })
     }
 
     const logout = () => {
-        window.location.href = "https://task-manager-desktop.pages.dev/log-in";
+        window.location.href = "https://task-manager-by-vision.pages.dev/login";
     }
 </script>
 
 <div class="settings-container" class:active={$isSettingsActive}>
     <div class="top">
-        <button class="logo" on:click={() => window.location.href = "https://task-manager-desktop.pages.dev/"}>
+        <button class="logo" on:click={() => window.location.href = "https://task-manager-by-vision.pages.dev/"}>
             <img src={logoSrc} alt="task manager logo">
             <p>Task Manager</p>
         </button>
