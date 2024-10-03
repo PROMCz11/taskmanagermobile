@@ -21,14 +21,14 @@
     let syncing = false;
 
     const sync = () => {
-        const addArray = $tasks.filter(task => task._id.includes("-fake-id"));
-        const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task._id) && !task._id.includes("-fake-id"));
+        const addArray = $tasks.filter(task => task.taskId.includes("-fake-id"));
+        const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task.taskId) && !task.taskId.includes("-fake-id"));
         const deleteArray = $offlineData.deletedWhileOfflineIDS.filter(taskID => !taskID.includes("-fake-id"));
         
         if(addArray.length || updateArray.length || deleteArray.length) {
             syncing = true;
             addArray.forEach(task => {
-                delete task.UserId;
+                // delete task.UserId;
                 delete task.__v;
                 delete task.last_updated;
             });
@@ -55,8 +55,8 @@
 
                     const idPairsArray = json.data.idPairs;
                     idPairsArray.forEach(pair => {
-                        const fakeTaskIndex = $tasks.findIndex(task => task._id === pair.fakeID);
-                        $tasks[fakeTaskIndex]._id = pair.realID;
+                        const fakeTaskIndex = $tasks.findIndex(task => task.taskId === pair.fakeID);
+                        $tasks[fakeTaskIndex].taskId = pair.realID;
                     })
                 }
 
@@ -108,7 +108,7 @@
             .then(res => res.json())
             .then(json => {
                 const newTask = {
-                    _id: json.data.id,
+                    taskId: json.data.taskId,
                     content: content,
                     date: date,
                     last_updated: date,
@@ -122,7 +122,7 @@
 
         else {
             const newTask = {
-                _id: generateFakeID(),
+                taskId: generateFakeID(),
                 content: content,
                 date: date,
                 last_updated: date,
@@ -154,7 +154,7 @@
         let fakeID;
         do {
             fakeID = Math.floor(100000 + Math.random() * 900000);
-        } while ($tasks.map(task => task._id).includes(fakeID));
+        } while ($tasks.map(task => task.taskId).includes(fakeID));
         return fakeID + "-fake-id";
     }
 </script>
@@ -195,26 +195,26 @@
             <span class="loader"></span>
         {:then}
             {#if filterCode === 0}
-                {#each $tasks as { _id, content, date, last_updated, important, completed } (_id)}
-                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {#each $tasks as { taskId, content, date, last_updated, important, completed } (taskId)}
+                    <Task bind:taskId bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     <p>No tasks.</p>
                 {/each}
             {:else if  filterCode === 1}
-                {#each undoneTasks as { _id, content, date, last_updated, important, completed } (_id)}
-                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {#each undoneTasks as { taskId, content, date, last_updated, important, completed } (taskId)}
+                    <Task bind:taskId bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     <p>No tasks.</p>
                 {/each}
             {:else if filterCode === 2}
-                {#each importantTasks as { _id, content, date, last_updated, important, completed } (_id)}
-                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {#each importantTasks as { taskId, content, date, last_updated, important, completed } (taskId)}
+                    <Task bind:taskId bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     <p>No tasks.</p>
                 {/each}
             {:else}
-                {#each completedTasks as { _id, content, date, last_updated, important, completed } (_id)}
-                    <Task bind:_id bind:content bind:date bind:last_updated bind:important bind:completed />
+                {#each completedTasks as { taskId, content, date, last_updated, important, completed } (taskId)}
+                    <Task bind:taskId bind:content bind:date bind:last_updated bind:important bind:completed />
                     {:else}
                     <p>No tasks.</p>
                 {/each}
