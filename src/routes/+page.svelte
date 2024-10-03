@@ -67,7 +67,7 @@
     }
     
     const getUserInfo = (jsonData) => {
-        $accountInformation.username = jsonData.name;
+        $accountInformation.username = jsonData.username;
         $accountInformation.email = jsonData.email;
         $accountInformation.appearanceCode = jsonData.appearance
         $accountInformation.auto_delete = jsonData.auto_delete
@@ -174,7 +174,7 @@
                     Loading...
                 {/if}
             </p>
-            <p class="version">1.12.27</p>
+            <p class="version">1.13.27</p>
             <div class="filters">
                 <button on:click={() => filterCode = 0} class="all-filter" class:active={filterCode === 0}>
                     <img src={allTasksIconSrc} alt="all tasks">
