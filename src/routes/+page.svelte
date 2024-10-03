@@ -55,7 +55,7 @@
 
                     const idPairsArray = json.data.idPairs;
                     idPairsArray.forEach(pair => {
-                        const fakeTaskIndex = $tasks.findIndex(task => task.taskId === pair.fakeID);
+                        const fakeTaskIndex = $tasks.findIndex(task => task.taskId == pair.fakeID);
                         $tasks[fakeTaskIndex].taskId = pair.realID;
                     })
                 }
@@ -69,8 +69,8 @@
     const getUserInfo = (jsonData) => {
         $accountInformation.username = jsonData.username;
         $accountInformation.email = jsonData.email;
-        $accountInformation.appearanceCode = jsonData.appearance
-        $accountInformation.auto_delete = jsonData.auto_delete
+        $accountInformation.appearanceCode = jsonData.appearance;
+        $accountInformation.auto_delete = jsonData.auto_delete;
     }
 
     const getTasksFromServer = async () => {
