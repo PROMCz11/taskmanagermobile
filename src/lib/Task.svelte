@@ -1,5 +1,5 @@
 <script>
-    export let important = false, completed = false, _id = 0, content = "", date = 0, last_updated = 0;
+    export let important = false, completed = false, taskId = 0, content = "", date = 0, last_updated = 0;
 
     import uncheckedRadioSrc from "$lib/assets/task-radio-unchecked-icon.svg"
     import checkedRadioSrc from "$lib/assets/task-radio-checked-icon.svg"
@@ -31,7 +31,7 @@
 
     const openDrawer = () => {
         if(!$isDrawerActive) {
-            $IDForDrawer = _id;
+            $IDForDrawer = taskId;
             $isDrawerActive = true;
         }
     }
@@ -43,7 +43,7 @@
                     method: "DELETE",
                     body: JSON.stringify({
                         // token: $token,
-                        ids: [_id]
+                        ids: [taskId]
                     }),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
@@ -51,13 +51,13 @@
                     }
                 })
 
-                $tasks = $tasks.filter(task => task._id != _id);
+                $tasks = $tasks.filter(task => task.taskId != taskId);
             }
             
             else {
                 completed = !completed;
                 last_updated = new Date().getTime();
-                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${taskId}`, {
                     method: "PATCH",
                     body: JSON.stringify({
                         // token: $token,
@@ -74,19 +74,19 @@
 
         else {
             if($accountInformation.auto_delete && !completed) {
-                $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, _id];
+                $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, taskId];
 
-                $tasks = $tasks.filter(task => task._id != _id);
+                $tasks = $tasks.filter(task => task.taskId != taskId);
             }
 
             else {
                 completed = !completed;
                 last_updated = new Date().getTime();
 
-                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task.taskId === taskId);
                 if(indexOfPreviouslyUpdatedTask === -1) {
                     const newUpdatedTask = {
-                        "_id": _id,
+                        "taskId": taskId,
                         "completed": completed,
                         "last_updated": last_updated
                     }
@@ -115,7 +115,7 @@
     const updateTaskContent = (newContent) => {
         if($isClientOnline) {
             last_updated = new Date().getTime();
-            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${taskId}`, {
                 method: "PATCH",
                 body: JSON.stringify({
                     // token: $token,
@@ -132,10 +132,10 @@
         else {
             last_updated = new Date().getTime();
 
-            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task.taskId === taskId);
             if(indexOfPreviouslyUpdatedTask === -1) {
                 const newUpdatedTask = {
-                    "_id": _id,
+                    "taskId": taskId,
                     "content": newContent,
                     "last_updated": last_updated
                 }
@@ -151,7 +151,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div id={_id} class="task" class:important class:completed transition:fade={{duration: 300}}>
+<div id={taskId} class="task" class:important class:completed transition:fade={{duration: 300}}>
     <button on:click={openDrawer}><img src={menuIconSrc} alt="menu"></button>
     <div>
         <p on:keydown={e => handleInput(e)} on:blur={e => blurHandler(e)} class="content" bind:textContent={content} contenteditable></p>

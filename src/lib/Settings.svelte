@@ -76,7 +76,7 @@
             method: "DELETE",
             body: JSON.stringify({
             // token: $token,
-            ids: $tasks.map(task => task._id)
+            ids: $tasks.map(task => task.taskId)
             }),
             headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -92,7 +92,7 @@
             method: "DELETE",
             body: JSON.stringify({
             // token: $token,
-            ids: $tasks.filter(task => task.completed).map(task => task._id)
+            ids: $tasks.filter(task => task.completed).map(task => task.taskId)
             }),
             headers: {
             "Content-type": "application/json; charset=UTF-8",

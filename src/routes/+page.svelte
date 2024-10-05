@@ -21,10 +21,12 @@
     let syncing = false;
 
     const sync = () => {
-        const addArray = $tasks.filter(task => task.taskId.includes("-fake-id"));
-        const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task.taskId) && !task.taskId.includes("-fake-id"));
-        const deleteArray = $offlineData.deletedWhileOfflineIDS.filter(taskID => !taskID.includes("-fake-id"));
-        
+        const addArray = $tasks.filter(task => typeof task.taskId === "string" && task.taskId.includes("-fake-id")).map(task => {
+            task.taskId = task.taskId.slice(0, 5);
+            return task;
+        });
+        const updateArray = $offlineData.updatedWhileOfflineTasksArray.filter(task => !$offlineData.deletedWhileOfflineIDS.includes(task.taskId) && typeof task.taskId != "string");
+        const deleteArray = $offlineData.deletedWhileOfflineIDS.filter(taskID => typeof taskID != "string");
         if(addArray.length || updateArray.length || deleteArray.length) {
             syncing = true;
             addArray.forEach(task => {

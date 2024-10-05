@@ -1,5 +1,5 @@
 <script>
-    // export let _id = 0;
+    // export let taskId = 0;
     import { isDrawerActive } from "$lib/stores";
     import { IDForDrawer } from "$lib/stores";
     import { tasks } from "$lib/stores";
@@ -15,16 +15,16 @@
         }
     }
 
-    let date, last_updated, important, completed, index, _id;
+    let date, last_updated, important, completed, index, taskId;
     const updateDrawer = () => {
         if($IDForDrawer) {
-            const displayedTask = $tasks.find(task => task._id === $IDForDrawer);
+            const displayedTask = $tasks.find(task => task.taskId === $IDForDrawer);
 
             date = displayedTask.date;
             last_updated = displayedTask.last_updated;
             important = displayedTask.important;
             completed = displayedTask.completed;
-            _id = displayedTask._id;
+            taskId = displayedTask.taskId;
 
             index = $tasks.indexOf(displayedTask);
         }
@@ -51,7 +51,7 @@
             $tasks[index].important = !$tasks[index].important;
             const last_updated = new Date().getTime();
             $tasks[index].last_updated = last_updated;
-            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+            fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${taskId}`, {
                 method: "PATCH",
                 body: JSON.stringify({
                     // token: $token,
@@ -70,10 +70,10 @@
             const last_updated = new Date().getTime();
             $tasks[index].last_updated = last_updated;
 
-            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+            const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task.taskId === taskId);
             if(indexOfPreviouslyUpdatedTask === -1) {
                 const newUpdatedTask = {
-                    "_id": _id,
+                    "taskId": taskId,
                     "important": important,
                     "last_updated": last_updated
                 }
@@ -88,7 +88,7 @@
 
     const toggleCompleted = () => {
         if($accountInformation.auto_delete && !completed) {
-            deleteTask([_id]);
+            deleteTask([taskId]);
         }
         
         else {
@@ -96,7 +96,7 @@
                 $tasks[index].completed = !$tasks[index].completed;
                 const last_updated = new Date().getTime();
                 $tasks[index].last_updated = last_updated;
-                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${_id}`, {
+                fetch(`https://task-manager-back-end-7gbe.onrender.com/api/tasks/update/${taskId}`, {
                     method: "PATCH",
                     body: JSON.stringify({
                         // token: $token,
@@ -115,10 +115,10 @@
                 const last_updated = new Date().getTime();
                 $tasks[index].last_updated = last_updated;
 
-                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task._id === _id);
+                const indexOfPreviouslyUpdatedTask = $offlineData.updatedWhileOfflineTasksArray.findIndex(task => task.taskId === taskId);
                 if(indexOfPreviouslyUpdatedTask === -1) {
                     const newUpdatedTask = {
-                        "_id": _id,
+                        "taskId": taskId,
                         "completed": completed,
                         "last_updated": last_updated
                     }
@@ -151,12 +151,12 @@
         }
 
         else {
-            $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, _id];
+            $offlineData.deletedWhileOfflineIDS = [...$offlineData.deletedWhileOfflineIDS, taskId];
         }
 
-        const _idShell = _id;
+        const taskIdShell = taskId;
         $IDForDrawer = "";
-        $tasks = $tasks.filter(task => task._id != _idShell);
+        $tasks = $tasks.filter(task => task.taskId != taskIdShell);
     }
 </script>
 
@@ -178,7 +178,7 @@
                 <p>Completed</p>
             </div>
         </div>
-        <button on:click={() => deleteTask([_id])} class="delete">
+        <button on:click={() => deleteTask([taskId])} class="delete">
             <img src={deleteIconSrc} alt="delete">
             <p>Delete</p>
         </button>
